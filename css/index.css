@@ -22,3 +22,9 @@
     color: white;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+.linkBtn{
+    width: 10%;
+    padding-top: 20px;
+    margin-left: 10px;
+}
