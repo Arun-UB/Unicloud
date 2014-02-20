@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
+        <link rel="stylesheet" href="dist/css/bootstrap.css">
+        <link rel="stylesheet" href="css/index.css">
+    </head>
+    <body>
+    	
+    	<div class="container">
+        <br>
+        <div class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            
+            <a class="navbar-brand" href="#">Unicloud</a>
+          </div>
+        </div><!--/.container-fluid -->
+      </div>    
+    		<div id="tabs">
+    			<ul class="nav nav-tabs">
+				  <li class="active"><a href="#home" data-toggle="tab">Dropbox</a></li>
+				  <li><a href="#profile" data-toggle="tab">Box</a></li>
+				  <li><a href="#messages" data-toggle="tab">Drive</a></li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane active" id="home">
+					    <div class = 'linkBtn'>
+                           <button type="button" class="btn btn-primary">Link your account</button>
+                        </div>
+				  	</div>
+				 	<div class="tab-pane" id="profile">
+						 <div class = 'linkBtn'>
+                           <button type="button" class="btn btn-primary">Link your account</button>
+                        </div>
+				  	</div>
+				  	<div class="tab-pane" id="messages">
+                     <div class = 'linkBtn'>
+                           <button type="button" class="btn btn-primary">Link your account</button>
+                        </div>
+					</div>
+				  	
+				</div>
+    		</div>
+		<div>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+         <script src="js/app.js"></script>
+    </body>
+</html>
