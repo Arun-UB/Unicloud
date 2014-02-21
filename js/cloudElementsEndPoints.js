@@ -1,6 +1,6 @@
 
-	
-	
+
+	app = null;	
 	function getStoreToken(store){
 	var boxToken="7f24ae465248f27d815f7ddec7568e60";
 	var dropboxToken="7f24ae465248f27d815f7ddec7568e60";
@@ -25,7 +25,9 @@
     beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Element '+token);},
 	data:dataObj,
 	success: (function(data) { 
-    console.debug(data);
+		app = data.results.records;
+		$rootScope= app;
+    console.debug(data.results.records);
 	}),
 	failure: (function(data){
 	console.log(data);

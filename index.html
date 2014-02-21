@@ -6,83 +6,251 @@
         <link rel="stylesheet" href="dist/css/bootstrap.css">
         <link rel="stylesheet" href="css/index.css">
     </head>
-    <body ng-controller='Main   '>
-    	
-    	<div class="container">
-             <br>
+    <body ng-controller='Main'>
+        <div  class="container">
+      <br>
         <div class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            
-            <a class="navbar-brand" href="#">Unicloud</a>
-          </div>
-        </div><!--/.container-fluid -->
-      </div> 
-    		<div id="tabs">
-    		  <ul class="nav nav-tabs">
-                  <li class="active"><a href="#home" data-toggle="tab">Dropbox</a></li>
-                  <li><a href="#profile" data-toggle="tab">Box</a></li>
-                  <li><a href="#messages" data-toggle="tab">Drive</a></li>
-                </ul>
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">Unicloud</a>
+            </div>
+          </div><!--/.container-fluid -->
+        </div> 
+          <div id="tabs">
+        <ul class="nav nav-tabs" ng-model='store' ng-init='store="dropbox";getFiles("/")'>
+            <li class="active"><a href="#home" data-toggle="tab" ng-click='store="dropbox";getFiles("/")'><strong>Dropbox</strong></a></li>
+            <li><a href="#profile" data-toggle="tab" ng-click='store="box";getFiles("/")'><strong>Box</strong></a></li>
+            <li><a href="#messages" data-toggle="tab" ng-click='store="drive";getFiles("/")'><strong>Drive</strong></a></li>
+          </ul>
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="home">
+              <div class="table-responsive">
+                <table  class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>File/Folder</th>
+                      <th class="size">Size(kb)</th>
+                      <th class="size">Action</th>
+                    </tr>
+                  </thead>
+                  <div class="col-lg-2 pull-right">
+                      <input type="text" ng-model="dropbx"  class="form-control" placeholder="Search">
+                    </div>
+                  <tbody ng-repeat="files in fileList | filter : dropbx">
 
-				<!-- Tab panes -->
-				<div class="tab-content">
-					<div class="tab-pane active" id="home">
-					
-				 	<div class="tab-pane" id="profile">
-						<div class="row">
-    <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody ng-repeat="roles in roleList">
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-             </tbody>
-            </table>
-          </div>
-      					</div>
-				  	</div>
-				  	<div class="tab-pane" id="messages">
-						<div class="row">
-        					
-      					</div>
-				  	</div>
-				  	<div class="tab-pane" id="settings">
-				  		<div class="row">
-        					
-      					</div>
-				  	</div>
-				</div>
-    		</div>
-		<div>
+                    <tr>
+                        <td ng-show="files.isDirectory" ng-click="getFiles(files.path)"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;{{files.fileName}}</td>
+                        <td ng-hide="files.isDirectory" ><span class="glyphicon glyphicon-file"></span>&nbsp;{{files.fileName}}</td>
+                     <td ng-show="files.isDirectory" class="size">-</td>
+                      <td ng-hide="files.isDirectory" class="size">{{files.size/1024 | number:0}}</td>
+                      <td class="size">
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="getURLs(store,files.path,'dwn')">Download</button>
+                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                              <span class="caret"></span>
+                              <span class="sr-only" >Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li><a href="#" onclick="" ng-click="getURLs(store,files.path,'view')">Share</a></li>
+                              <li><a href="#">Delete</a></li>
+                             
+                            </ul>
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">Share link</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                        <div class="well">{{$scope.viewUrl}}</div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                          </div>
+                      </td>
+                    </tr>
+                   
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane" id="profile">
+               <div class="table-responsive">
+                <table  class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>File/Folder</th>
+                      <th class="size">Size(kb)</th>
+                      <th class="size">Action</th>
+                    </tr>
+                  </thead>
+                   <div class="col-lg-2 pull-right">
+                      <input type="text" ng-model="box"  class="form-control" placeholder="Search">
+                    </div>
+                  <tbody ng-repeat="files in fileList | filter:box">
 
+                    <tr>
+                        <td ng-show="files.isDirectory" ng-click="getFiles(files.path)"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;{{files.fileName}}</td>
+                        <td ng-hide="files.isDirectory" ><span class="glyphicon glyphicon-file"></span>&nbsp;{{files.fileName}}</td>
+                      <td ng-show="files.isDirectory" class="size">-</td>
+                      <td ng-hide="files.isDirectory" class="size">{{files.size/1024}}</td>
+                      <td class="size">
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="getURLs(store,files.path,'dwn')">Download</button>
+                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                              <span class="caret"></span>
+                              <span class="sr-only" >Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li><a href="#" onclick="" ng-click="getURLs(store,files.path,'view')">Share</a></li>
+                              <li><a href="#">Delete</a></li>
+                             
+                            </ul>
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">Share link</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                        <div class="well">{{$scope.viewUrl}}</div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                          </div>
+                      </td>
+                    </tr>
+                   
+                  </tbody>
+                </table>
+              </div>            
+            </div>
+            <div class="tab-pane" id="messages">
+                <div class="table-responsive">
+                <table  class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>File/Folder</th>
+                      <th class="size">Size(kb)</th>
+                      <th class="size">Action</th>
+                    </tr>
+                  </thead>
+                   <div class="col-lg-2 pull-right">
+                      <input type="text" ng-model="drive"  class="form-control" placeholder="Search">
+                    </div>
+                  <tbody ng-repeat="files in fileList | filter: drive">
 
-        <div>
-            
-            <table ng-repeat="roles in roleList">
-                <tr>
-                    <td ng-bind="roles.roleName"></td>
-                </tr>
-            </table>
-        </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+                    <tr>
+                        <td ng-show="files.isDirectory" ng-click="getFiles(files.path)"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;{{files.fileName}}</td>
+                        <td ng-hide="files.isDirectory" ><span class="glyphicon glyphicon-file"></span>&nbsp;{{files.fileName}}</td>
+                    <td ng-show="files.isDirectory" class="size">-</td>
+                      <td ng-hide="files.isDirectory" class="size">{{files.size/1024 | number:0}}</td>
+                      <td class="size">
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-primary" ng-click="getURLs(store,files.path,'dwn')">Download</button>
+                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                              <span class="caret"></span>
+                              <span class="sr-only" >Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li><a href="#" onclick="" ng-click="getURLs(store,files.path,'view')">Share</a></li>
+                              <li><a href="#">Delete</a></li>
+                             
+                            </ul>
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">Share link</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                        <div class="well">{{$scope.viewUrl}}</div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                          </div>
+                      </td>
+                    </tr>
+                   
+                  </tbody>
+                </table>
+              </div>    
+            </div>
+             <div class="tab-pane" id="settings">
+                <div class="table-responsive">
+                               <table  class="table table-striped">
+                                 <thead>
+                                   <tr>
+                                     <th>File/Folder</th>
+                                     <th class="size">Type</th>
+                                     <th class="size">Modified</th>
+                                   </tr>
+                                 </thead>
+                                 <tbody ng-repeat="files in fileList">
+
+                                   <tr>
+                                       <td ng-show="files.isDirectory" ng-click="getFiles(files.path)"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;{{files.fileName}}</td>
+                                       <td ng-hide="files.isDirectory" ><span class="glyphicon glyphicon-file"></span>&nbsp;{{files.fileName}}</td>
+                                     <td ng-show="files.isDirectory" class="size">-</td>
+                                     <td class="size">
+                                         <div class="btn-group">
+                                           <button type="button" class="btn btn-sm btn-primary" ng-click="getURLs(store,files.path,'dwn')">Download</button>
+                                           <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                                             <span class="caret"></span>
+                                             <span class="sr-only" >Toggle Dropdown</span>
+                                           </button>
+                                           <ul class="dropdown-menu" role="menu">
+                                             <li><a href="#" onclick="" ng-click="getURLs(store,files.path,'view')">Share</a></li>
+                                             <li><a href="#">Delete</a></li>
+                                            
+                                           </ul>
+                                           <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                 <div class="modal-dialog">
+                                                   <div class="modal-content">
+                                                     <div class="modal-header">
+                                                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                       <h4 class="modal-title" id="myModalLabel">Share link</h4>
+                                                     </div>
+                                                     <div class="modal-body">
+                                                       <div class="well">{{$scope.viewUrl}}</div>
+                                                     </div>
+                                                     <div class="modal-footer">
+                                                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                     </div>
+                                                   </div>
+                                                 </div>
+                                               </div>
+                                         </div>
+                                     </td>
+                                   </tr>
+                                  
+                                 </tbody>
+                               </table>
+                             </div>
+          <div>
+     
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
         <script src="dist/js/bootstrap.min.js"></script>
-        <script src="js/app.js"></script>
         <script src="js/cloudElementsEndPoints.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.1.0/bootbox.min.js"></script>
+                <script src="js/app.js"></script>
     </body>
 </html>
